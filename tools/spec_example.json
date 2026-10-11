@@ -1,5 +1,20 @@
 {
   "slug": "switch-expressions",
+  "cover": {
+    "kicker": "JAVA 14+",
+    "kicker_color": "green",
+    "title": [
+      {"text": "Stop writing", "size": 110, "color": "white"},
+      {"text": "break", "size": 200, "color": "orange"},
+      {"text": "in switch", "size": 110, "color": "white"}
+    ],
+    "snippet": [
+      "String type = switch (day) {",
+      "    case SAT, SUN -> \"Weekend\";",
+      "    default -> \"Weekday\";",
+      "};"
+    ]
+  },
   "scenes": [
     {
       "type": "hook",

@@ -1,0 +1,108 @@
+{
+  "slug": "switch-expressions",
+  "cover": {
+    "kicker": "JAVA 14+",
+    "kicker_color": "green",
+    "title": [
+      {"text": "Stop writing", "size": 110, "color": "white"},
+      {"text": "break", "size": 200, "color": "orange"},
+      {"text": "in switch", "size": 110, "color": "white"}
+    ],
+    "snippet": [
+      "String type = switch (day) {",
+      "    case SAT, SUN -> \"Weekend\";",
+      "    default -> \"Weekday\";",
+      "};"
+    ]
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "dur": 2.8,
+      "lines": [
+        {"text": "Still writing", "size": 88, "color": "white"},
+        {"text": "break", "size": 210, "color": "orange"},
+        {"text": "in every switch?", "size": 88, "color": "white"}
+      ]
+    },
+    {
+      "type": "code",
+      "dur": 5.0,
+      "chip": "THE OLD WAY",
+      "chip_color": "red",
+      "code": [
+        "String type;",
+        "switch (day) {",
+        "    case SAT:",
+        "    case SUN:",
+        "        type = \"Weekend\";",
+        "        break;",
+        "    default:",
+        "        type = \"Weekday\";",
+        "}"
+      ],
+      "highlight": ["break"],
+      "highlight_color": "red",
+      "type_dur": 3.2,
+      "after_at": 3.5,
+      "after": [
+        {"text": "Miss one break?", "size": 70, "color": "white"},
+        {"text": "Fall-through bug.", "size": 70, "color": "red"}
+      ]
+    },
+    {
+      "type": "code",
+      "dur": 5.5,
+      "chip": "JAVA 14+",
+      "chip_color": "green",
+      "code": [
+        "String type = switch (day) {",
+        "    case SAT, SUN -> \"Weekend\";",
+        "    default -> \"Weekday\";",
+        "};"
+      ],
+      "type_dur": 2.4,
+      "after_at": 2.8,
+      "after": [
+        {"text": "9 lines", "size": 80, "color": "muted"},
+        {"text": "4 lines", "size": 130, "color": "orange"}
+      ]
+    },
+    {
+      "type": "rules",
+      "dur": 5.0,
+      "title": "Why it's better",
+      "items": ["No fall-through", "Returns a value", "Must be exhaustive"]
+    },
+    {
+      "type": "code",
+      "dur": 4.5,
+      "chip": "NEED MORE LOGIC?",
+      "chip_color": "orange",
+      "code": [
+        "int len = switch (cmd) {",
+        "    case \"go\" -> 2;",
+        "    default -> {",
+        "        System.out.println(cmd);",
+        "        yield cmd.length();",
+        "    }",
+        "};"
+      ],
+      "highlight": ["yield"],
+      "highlight_color": "orange",
+      "type_dur": 3.2,
+      "after_at": 3.5,
+      "after": [
+        {"text": "Use yield to return", "size": 66, "color": "white"},
+        {"text": "from a block.", "size": 66, "color": "orange"}
+      ]
+    },
+    {
+      "type": "cta",
+      "dur": 2.8,
+      "title": "Save this.",
+      "sub": "Follow for daily Java.",
+      "handle": "@javaprograminglanguage"
+    }
+  ]
+}

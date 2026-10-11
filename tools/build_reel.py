@@ -6,8 +6,10 @@ Usage:
     python3 tools/build_reel.py spec.json out.mp4 --preview 1.6 6.6 11.4   # PNG stills only
 
 The video has animated text/code scenes, an original synthesized background
-track and soft typing clicks on the code scenes. See tools/spec_example.json
-and REEL_WORKFLOW.md for the spec format.
+track and soft typing clicks on the code scenes. Every build also writes the
+thumbnail (cover image) next to the video as <out>_cover.png; --preview writes
+it as <out>_cover.png too. The spec must contain a "cover" block. See
+tools/spec_example.json and REEL_WORKFLOW.md for the spec format.
 """
 import hashlib
 import json
@@ -18,7 +20,7 @@ import sys
 import tempfile
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from scipy.io import wavfile
 from scipy.signal import butter, fftconvolve, sosfilt
 
@@ -111,6 +113,17 @@ def validate(spec):
             raise SystemExit(f"scene {i}: rules needs 2-4 items")
     if not 18 <= total <= 35:
         raise SystemExit(f"total duration {total:.1f}s must be between 18 and 35 seconds")
+    cover = spec.get("cover")
+    if not cover:
+        raise SystemExit("spec needs a 'cover' block (thumbnail): kicker, title lines, optional snippet")
+    if not 1 <= len(cover.get("title", [])) <= 3:
+        raise SystemExit("cover.title needs 1-3 lines")
+    snip = cover.get("snippet", [])
+    if len(snip) > 4:
+        raise SystemExit("cover.snippet can have at most 4 lines")
+    for ln in snip:
+        if len(ln) > MAX_CODE_COLS:
+            raise SystemExit(f"cover.snippet line too long ({len(ln)}>{MAX_CODE_COLS}): {ln!r}")
     return total
 
 
@@ -276,6 +289,32 @@ def make_frame_fn(spec, total):
     return frame_at
 
 
+# --------------------------------------------------------------------- cover
+def build_cover(spec, path):
+    """Thumbnail for the Reel: big hook title, optional code snippet, kept inside
+    the centre area that survives Instagram's 3:4 profile-grid crop."""
+    c = spec["cover"]
+    img = bg.copy()
+    glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(glow).ellipse([560, 180, 1220, 840], fill=(248, 152, 32, 95))
+    img.alpha_composite(glow.filter(ImageFilter.GaussianBlur(130)))
+    d = ImageDraw.Draw(img)
+    chip(d, 70, 440, c.get("kicker", "JAVA TIP"), color(c.get("kicker_color", "orange"), ORANGE))
+    y = 580
+    for ln in c["title"]:
+        size = ln.get("size", 140)
+        f = fit_font(INTER_B, size, ln["text"])
+        d.text((70, y + size * 0.55), ln["text"], font=f, fill=color(ln.get("color", "white")), anchor="lm")
+        y += size * 1.18
+    snippet = c.get("snippet", [])
+    if snippet:
+        code_card(d, int(y + 50), snippet, 1.0, set(c.get("highlight", [])), HL.get(c.get("highlight_color", "orange")))
+        y += 50 + len(snippet) * LINE_H + 80
+    d.text((70, int(y + 70)), "@javaprograminglanguage", font=F(INTER_SB, 34), fill=MUTED, anchor="lm")
+    img.convert("RGB").save(path)
+    return path
+
+
 # --------------------------------------------------------------------- audio
 def midi(n):
     return 440.0 * 2 ** ((n - 69) / 12)
@@ -414,6 +453,7 @@ def main():
     if "--preview" in args:
         times = [float(x) for x in args[args.index("--preview") + 1:]]
         base = os.path.splitext(out)[0]
+        print(build_cover(spec, f"{base}_cover.png"))
         for T in times:
             path = f"{base}_{T:.1f}.png"
             frame_at(T).save(path)
@@ -444,7 +484,8 @@ def main():
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-map", "0:v:0", "-map", "1:a:0",
                         "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-af", "loudnorm=I=-16:TP=-1.5:LRA=7",
                         "-shortest", "-movflags", "+faststart", out], check=True)
-    print(f"wrote {out} ({total:.1f}s, {frames} frames)")
+    cover_path = build_cover(spec, os.path.splitext(out)[0] + "_cover.png")
+    print(f"wrote {out} ({total:.1f}s, {frames} frames) and cover {cover_path}")
 
 
 if __name__ == "__main__":
