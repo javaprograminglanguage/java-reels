@@ -1,0 +1,146 @@
+{
+  "slug": "string-immutable",
+  "cover": {
+    "kicker": "COMMON MISTAKE",
+    "kicker_color": "red",
+    "title": [
+      {
+        "text": "This line does",
+        "size": 110,
+        "color": "white"
+      },
+      {
+        "text": "NOTHING",
+        "size": 200,
+        "color": "orange"
+      }
+    ],
+    "snippet": [
+      "String s = \"java\";",
+      "s.toUpperCase();",
+      "// s is still \"java\""
+    ]
+  },
+  "scenes": [
+    {
+      "type": "hook",
+      "dur": 2.8,
+      "lines": [
+        {
+          "text": "Why does",
+          "size": 88,
+          "color": "white"
+        },
+        {
+          "text": "toUpperCase()",
+          "size": 120,
+          "color": "orange"
+        },
+        {
+          "text": "do nothing?",
+          "size": 88,
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "dur": 5.5,
+      "chip": "THE MISTAKE",
+      "chip_color": "red",
+      "code": [
+        "String s = \"java\";",
+        "s.toUpperCase();",
+        "System.out.println(s);",
+        "// prints: java"
+      ],
+      "highlight": [
+        "toUpperCase"
+      ],
+      "highlight_color": "red",
+      "type_dur": 2.8,
+      "after_at": 3.2,
+      "after": [
+        {
+          "text": "Strings are immutable.",
+          "size": 64,
+          "color": "white"
+        },
+        {
+          "text": "Result thrown away.",
+          "size": 64,
+          "color": "red"
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "dur": 5.5,
+      "chip": "THE FIX",
+      "chip_color": "green",
+      "code": [
+        "String s = \"java\";",
+        "s = s.toUpperCase();",
+        "System.out.println(s);",
+        "// prints: JAVA"
+      ],
+      "type_dur": 2.8,
+      "after_at": 3.2,
+      "after": [
+        {
+          "text": "Assign it back.",
+          "size": 80,
+          "color": "orange"
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "dur": 5.0,
+      "chip": "NEED TO CHANGE IT?",
+      "chip_color": "orange",
+      "code": [
+        "StringBuilder sb =",
+        "    new StringBuilder(\"Ja\");",
+        "sb.append(\"va\");",
+        "System.out.println(sb);",
+        "// prints: Java"
+      ],
+      "highlight": [
+        "append"
+      ],
+      "highlight_color": "orange",
+      "type_dur": 3.2,
+      "after_at": 3.6,
+      "after": [
+        {
+          "text": "StringBuilder",
+          "size": 80,
+          "color": "orange"
+        },
+        {
+          "text": "changes in place.",
+          "size": 66,
+          "color": "white"
+        }
+      ]
+    },
+    {
+      "type": "rules",
+      "dur": 4.5,
+      "title": "String rules",
+      "items": [
+        "Never changes",
+        "Methods return copies",
+        "Assign the result"
+      ]
+    },
+    {
+      "type": "cta",
+      "dur": 2.8,
+      "title": "Save this.",
+      "sub": "Follow for daily Java.",
+      "handle": "@javaprograminglanguage"
+    }
+  ]
+}
