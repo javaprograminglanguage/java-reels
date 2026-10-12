@@ -26,9 +26,12 @@ Two reels a day. Each run builds ONE reel (about 25 s, 1080x1920, original music
 7. **Notify Ayush** (in this session): send the mp4 AND the cover png with SendUserFile (display render, caption "Reel for <slot> IST: <topic>" / "Thumbnail"), write the caption directly in the chat (not as a file), and ask one question: "Post at <time> IST? Reply yes, or give a new time / change."
 
 ## When Ayush replies in the session
-- **yes**: `getScheduledPosts` to find the draft's id, then `updateScheduledPost` with `draft: false`, `autoPublish: true`, same slot time (reuse the draft's Metricool media URL, thumbnail, text and alt text). If the slot already passed, set it 2 minutes after now. Confirm the time; set status `scheduled` in `reels.md`.
+- **yes**: `getScheduledPosts` to find the draft's id, then `updateScheduledPost` with `draft: false` and **`autoPublish: true` (never false: false only sends a phone notification and does NOT post by itself)**, same slot time (reuse the draft's Metricool media URL, thumbnail, text and alt text). If the slot already passed, set it 2 minutes after now. Confirm the time; set status `scheduled` in `reels.md`.
 - **no / change**: edit the spec or caption, rebuild, re-push, update the draft, ask again; or move to another time he names. Keep as draft until he says yes.
 - **No reply:** leave the draft. Never publish on your own.
 
 ## If something fails
 Do not loop retries and do not publish. Tell Ayush in one short message what failed and what he needs to do (reconnect Metricool or GitHub, etc.). Do not try to get around network blocks (PyPI, Hugging Face and similar are blocked in this workspace; no text-to-speech is available, so reels have music and typing sounds but no narration).
+
+## Verify it really went live
+Metricool's "Published" label alone is not proof. After the slot time (and after any "post now"), call `getScheduledPosts` for that day and check the instagram provider has a `publicUrl` (an instagram.com/reel/... link). If the status says Published but there is no `publicUrl`, or the post is still Pending well after its time, tell Ayush plainly that it is NOT confirmed live and offer to reschedule with `autoPublish: true`. Never tell him a reel is live without the link. A date can never be in the past: for "post now" use 3-4 minutes from now.
