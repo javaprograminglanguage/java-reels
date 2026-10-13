@@ -1,5 +1,7 @@
 # Daily Reel Workflow (@javaprograminglanguage)
 
+> **PAUSED on 2026-10-13 at Ayush's request.** Both reel scheduled tasks are disabled and no reels are being made or posted. Do not create reels unless Ayush asks again.
+
 Two reels a day. Each run builds ONE reel (about 25 s, 1080x1920, original music, typing sounds, minimal text, no narration) and saves it as a **Metricool draft** for Ayush to approve. Nothing is published without his explicit yes.
 
 ## Fixed facts
